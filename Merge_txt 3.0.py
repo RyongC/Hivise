@@ -37,7 +37,7 @@ def make_folder(name):
 def finallist():
     for txt in raw_txts:
         file_list.append(txt)
-        file_ctime.append(int(os.path.getctime(txt) % 100000))
+        file_ctime.append(int(os.path.getmtime(txt) % 100000))
     filedict = dict(zip(file_ctime, file_list))
     s_filedict = sorted(filedict.items())
     for txt in s_filedict:
