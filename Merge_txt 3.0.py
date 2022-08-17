@@ -14,11 +14,12 @@ from time import strftime
 def save_final():
     with open(f'{merged_file_dir}/Merged_{merged_file_name}.txt', 'w') as m_file:
         m_file.write(merged_txt)
+    return
 
 
 def read_txt():
     global merged_txt
-    for data in s_filedict:
+    for data in final_list:
         with open(data, 'r') as file:
             for line in file:
                 if not line or line == '\n':
@@ -33,21 +34,27 @@ def make_folder(name):
     return
 
 
+def finallist():
+    for txt in raw_txts:
+        file_list.append(txt)
+        file_ctime.append(int(os.path.getctime(txt) % 100000))
+    filedict = dict(zip(file_ctime, file_list))
+    s_filedict = sorted(filedict.items())
+    for txt in s_filedict:
+        final_list.append(txt[-1])
+    return
+
+
 raw_txts = glob('*.txt')  # *.txt 파일 리스트로 가져오기
-file_list = []
-file_ctime = []
-
-for raw_txt in raw_txts:
-    file_list.append(raw_txt)
-    file_ctime.append(int(os.path.getctime(raw_txt) % 100000))
-
-filedict = dict(zip(file_ctime, file_list))
-s_filedict = sorted(filedict.items())
+file_list = []  # 텍스트 파일 중간저장
+file_ctime = []  # 텍스트 파일 생성시간 저장
+final_list = []  # 정렬 후 리스트
 
 merged_file_name = strftime('%Y_%m_%d_%H_%M_%S')  # 파일이름 안겹치게 시간으로
 merged_file_dir = 'Merged'  # 반복실행시 서치안되게 예외처리
 merged_txt = ''  # 빈 텍스트 생성
 
+finallist()
 read_txt()
 make_folder(merged_file_dir)
 save_final()
