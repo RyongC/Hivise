@@ -2,7 +2,7 @@
 2022.11.10
 Author: Yongtae.Seo
 '''
-
+import os
 from tkinter import *
 from tkinter import filedialog
 from glob import glob
@@ -19,10 +19,18 @@ def btn_exe():
     print(list(final))
     return
 
+## 아래 꺼 한번더 생각해보자
 def txt_lst(tmp):
-    lst = glob(f'{tmp}\PRESSURE_*.txt')
-    print(lst)
-    return lst
+    # lst = glob(f'{tmp}\PRESSURE_*.txt')
+    # tmp = []
+    # for txt in lst:
+    #     tmp.append(txt.lstrip(f'{tmp}\PRESSURE_').rstrip('.txt').split('_'))
+    # print(tmp)
+    # return
+    tmp1 = os.listdir(tmp)
+    print(tmp1)
+    return
+
 
 
 def folder_dir(tmp):
