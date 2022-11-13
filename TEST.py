@@ -7,16 +7,16 @@ from tkinter import *
 from tkinter import filedialog
 from glob import glob
 
-
 root = Tk()
 root.title('Hivise')
 root.resizable(False, False)
 
+
 def btn_exe():
     tmp = folder_path()
     path = folder_dir(tmp)
-    fnl = map(txt_lst, path)
-    print(list(fnl))
+    final = map(txt_lst, path)
+    print(list(final))
     return
 
 def txt_lst(tmp):
@@ -24,19 +24,23 @@ def txt_lst(tmp):
     print(lst)
     return lst
 
+
 def folder_dir(tmp):
     path = glob(f'{tmp}\(*)')
     print(path)
     return path
+
 
 def folder_path():
     tmp = filedialog.askdirectory()
     print(tmp)
     return tmp
 
+
 def entrylength(var):
     if len(var.get()) > 2:
         var.set(var.get()[1])
+
 
 '''
 Variable
@@ -47,7 +51,6 @@ path_list = []
 row_var = StringVar()
 col_var = StringVar()
 length = 3
-
 
 '''
 UI
