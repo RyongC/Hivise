@@ -1,11 +1,13 @@
 '''
-2022.11.10
+2022.11.14
 Author: Yongtae.Seo
 '''
 import os
+import re
 from tkinter import *
 from tkinter import filedialog
 from glob import glob
+import numpy as np
 
 root = Tk()
 root.title('Hivise')
@@ -14,34 +16,61 @@ root.resizable(False, False)
 
 def btn_exe():
     tmp = folder_path()
-    path = folder_dir(tmp)
-    final = map(txt_lst, path)
-    print(list(final))
+    main_path.set(tmp)  # <- path
+    folder_list = folder_dir(tmp)  # <- ['(0, 0)' ... ]
+    # final = map(txt_lst, folder_list)
+    for i in folder_list:
+        txt_lst(i)
+    print(arr_dict)
     return
 
-## 아래 꺼 한번더 생각해보자
-def txt_lst(tmp):
-    # lst = glob(f'{tmp}\PRESSURE_*.txt')
-    # tmp = []
-    # for txt in lst:
-    #     tmp.append(txt.lstrip(f'{tmp}\PRESSURE_').rstrip('.txt').split('_'))
-    # print(tmp)
-    # return
-    tmp1 = os.listdir(tmp)
-    print(tmp1)
+def merged(sorteds):  # path / 정렬된 텍스트 이터레이터 활용 -> {매개변수 폴더이름 : 머지 배열(ndim : 1)}
+    with open(f'{txt_path.get()}/{sorteds}', 'r') as txt:
+        tmp1 = txt.read().replace('\t\n', '\t').split('\t')
+        tmp2 = filter(lambda x: x != '', tmp1)
+        arr = np.array(list(tmp2))
+    return arr
+
+
+def txt_lst(folders):
+    path = f'{main_path.get()}/{folders}'
+    folder_idx.set(folders)
+    txt_path.set(path)
+    lst = glob('PRESSURE_*.txt', root_dir = txt_path.get())  # <- 비정렬 텍스트 리스트
+    for i in lst:
+        idx_txt(i)
+    sorted_txt = sorted(txt_dict, key = lambda x: txt_dict[x])  # <- 정렬된 텍스트 이름
+    for txt in sorted_txt:
+        sorted_txt_lst.append(merged(txt))
+    arr_dict[folders] = np.array(sorted_txt_lst).reshape(-1)
+    sorted_txt_lst.clear()
+    txt_dict.clear()
     return
 
+
+def idx_txt(arg):  # <- txt 리스트를 받아서 txt_dict 딕셔너리에 이름과
+    tmp = indexing(arg)
+    txt_dict[arg] = int(''.join([x.zfill(2) for x in tmp]))
+    return
+
+
+def indexing(arg):
+    tmp = re.findall(pattern = '\d+', string = arg)
+    return tmp
 
 
 def folder_dir(tmp):
-    path = glob(f'{tmp}\(*)')
-    print(path)
-    return path
+    folders = glob('(*)', root_dir = f'{tmp}')
+    point = list(map(indexing, folders))
+    # print(point, '<-p')
+    # print(folders, '<-f')
+    folder_indexing.append(point)
+    return folders
 
 
 def folder_path():
     tmp = filedialog.askdirectory()
-    print(tmp)
+    print(tmp, '<-')
     return tmp
 
 
@@ -53,12 +82,19 @@ def entrylength(var):
 '''
 Variable
 '''
-
+sorted_txt_lst = []
+arr_dict = {}
+txt_dict = {}
+folder_idx = StringVar()
+main_path = StringVar()
+txt_path = StringVar()
+folder_indexing = []
 txt_list = []
 path_list = []
 row_var = StringVar()
 col_var = StringVar()
 length = 3
+
 
 '''
 UI
