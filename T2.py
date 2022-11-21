@@ -1,15 +1,21 @@
-from glob import glob
-import re
+import numpy as np
 
-txt_lst = glob('PRESSURE_*.txt')
+rw = 8
+col = 2
 
-def txt_sort(txts):
-    tmp = re.findall('\d+', txts)
-    idx = int(''.join([x.zfill(2) for x in tmp]))
-    return idx
+arr = np.full(shape = (40, 40), fill_value = 99)
 
-idx = map(txt_sort, txt_lst)
-txt_dict = dict(zip(txt_lst, idx))
-sorted_txt = sorted(txt_dict, key = lambda x : txt_dict[x])
+arr1 = np.full(shape = (40, 40), fill_value = 1)
+arr2 = np.full(shape = (40, 40), fill_value = 2)
 
-print(sorted_txt)
+
+for r in range(rw):
+    for c in range(col):
+        arr[r][c] = arr2[r][c]
+
+print(arr)
+# arr2 =
+# arr10 =
+
+
+# print(arr1)
